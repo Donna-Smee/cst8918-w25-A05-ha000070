@@ -124,3 +124,18 @@ resource "azurerm_network_interface_security_group_association" "nsg_association
   network_interface_id      = azurerm_network_interface.nic.id
   network_security_group_id = azurerm_network_security_group.sg.id
 }
+
+
+# config the init script for the VM
+data "cloudinit_config" "web_server" {
+  gzip          = false
+  base64_encode = false
+
+  part {
+    filename     = "init.sh"
+    content_type = "text/x-shellscript"
+
+    content = file("init.sh")
+  }
+}
+
