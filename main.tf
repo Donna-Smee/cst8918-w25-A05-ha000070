@@ -139,3 +139,35 @@ data "cloudinit_config" "web_server" {
   }
 }
 
+# define the Azure virtual machine for the web server
+resource "azurerm_linux_virtual_machine" "web_server" {
+  name                = "${var.labelPrefix}A05VM"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  size                = "Standard_B1s"  
+  admin_username      = var.admin_username
+  admin_ssh_key {
+    username   = var.admin_username
+    public_key = file("${path.module}/public_key.pub") 
+}
+
+  
+  network_interface_ids = [
+    azurerm_network_interface.nic.id  # Link the NIC to this VM
+  ]
+  
+  # Use Cloud-init to run the init.sh script on first boot
+  custom_data = data.cloudinit_config.web_server.rendered
+
+  # Define the image for the VM (Ubuntu)
+  image_reference {
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "20.04-LTS"
+    version   = "latest"
+  }
+
+  tags = {
+    environment = "Development"
+  }
+}
