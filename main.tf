@@ -118,3 +118,9 @@ resource "azurerm_network_interface" "nic" {
     public_ip_address_id          = azurerm_public_ip.webserver.id
   }
 }
+
+# apply security group to the webserver
+resource "azurerm_network_interface_security_group_association" "nsg_association" {
+  network_interface_id      = azurerm_network_interface.nic.id
+  network_security_group_id = azurerm_network_security_group.sg.id
+}
