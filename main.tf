@@ -24,3 +24,21 @@ provider "azurerm" {
 provider "cloudinit" {
   # Configuration options
 }
+
+# Define labelPrefix variable
+variable “labelPrefix” {
+	type = string
+	description = “Your college username. This will form the beginning of various resource names.”
+}
+
+# Define region variable
+variable “region” {
+	default = “westus3”
+}
+
+# Define the admin_username variable
+variable “admin_username” {
+	type = string
+	default = “azureadmin”
+	description = “The username for the local user account on the VM.”
+}
